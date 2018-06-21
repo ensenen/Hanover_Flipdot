@@ -98,7 +98,7 @@ class Display(object):
             for i in range(len(self.font[0])):
                 if column > self.columns:
                     return 0
-                self.buf[column] &= ~((mask << line) & (1 << (self.byte_per_column * 8))) -1
+                self.buf[column] &= ~((mask << line) & ((1 << self.byte_per_column*8)-1))
                 self.buf[column] |= ((self.font[ord(char)][i])<<line) &  (1 << (self.byte_per_column * 8)) - 1
                 column += 1
 
