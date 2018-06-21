@@ -10,22 +10,20 @@ class Simulator(object):
         else:
             return byte - 0x30
 
-    def display(self, frame):
+    def display(self, frame, lines):
         # Parse each column
-        for i in range(len(frame)/4):
-            b1 = frame[(i*4)+1]
-            b2 = frame[(i*4)+0]
-            b3 = frame[(i*4)+3]
-            b4 = frame[(i*4)+2]
+        for i in range(len(frame)/((lines*2))):
+            byte = 0
+            for j in range(lines):
+                b1 = frame[i*((lines*2))+1+2*j]
+                b2 = frame[i*((lines*2))+0+2*j]
+                b1 = self.__unascii__(b1)
+                b2 = self.__unascii__(b2)
+                byte += (b1 << ((j*8) + 4)) 
+                byte += (b2 << (j*8))
             # Combine the four ASCII bytes into one hex byte
-            b1 = self.__unascii__(b1)
-            b2 = self.__unascii__(b2)
-            b3 = self.__unascii__(b3)
-            b4 = self.__unascii__(b4)
-
-            byte = ((b3*4096) + (b4*256) + (b1 * 16) + b2)
-
-            for k in range(15, -1, -1):
+            r = (lines * 8) - 1
+            for k in range(r, -1, -1):
                 if byte & (1 << (k)):
                     print "\033[43m\033[%d;%dH \033[0m"%((k+1), i)
                 else:

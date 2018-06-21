@@ -16,6 +16,7 @@ class Display(object):
 
         if lines % 8:
             lines = lines + (8-(lines % 8))
+        self.lines = lines / 8
 
         self.columns = columns - 1
 
@@ -195,11 +196,9 @@ class Display(object):
         else:
             simbuf = []
             for byte in self.buf:
-                b1, b2 = self.byte_to_ascii(byte & 0xFF)
-                simbuf.append(b2)
-                simbuf.append(b1)
-                b1, b2 = self.byte_to_ascii((byte >> 8) & 0xFF)
-                simbuf.append(b2)
-                simbuf.append(b1)
-            self.sim.display(simbuf)
+                for i in range(self.lines):
+                    b1, b2 = self.byte_to_ascii(byte >> (i*8) & 0xFF)
+                    simbuf.append(b2)
+                    simbuf.append(b1)
+            self.sim.display(simbuf, self.lines)
             return 0
