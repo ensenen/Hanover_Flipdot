@@ -49,4 +49,6 @@ For example, here's a complete frame for a 21*16 display :
 0x03 0x34 0x41                                          # Footer
 ```
 
-
+--------------
+第6章、通訊網路傳輸原理 P.17 (baudrate數值問題)
+http://read.pudn.com/downloads114/doc/comm/477646/%E4%B8%B2%E5%88%97%E5%82%B3%E8%BC%B8.pdf
