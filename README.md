@@ -1,9 +1,11 @@
 ## Address
 Address 係一個介付於 0-F 嘅數值，用來分辨控制器輸出嘅訊號係去邊塊板。每一塊顯示板都有一個電子零件可以設定嗰塊板自己嘅Address。
 
-訊號入面代表Address 嘅Byte係由兩個Byte組成，其中第一個Byte係固定值0x31，第二個Byte係根據唔同嘅Address而唔同
+訊號入面代表Address 嘅Byte係由兩個Byte組成，其中第一個Byte係固定值0x31，第二個Byte係根據唔同嘅Address而唔同，喺ASCII 佢係0-F。
 
-| 顯示板上嘅Address | 訊號嘅Address (Ascii) | 訊號嘅Address (Hex) |
+有一點要注意，訊號嘅Address係顯示板上嘅Address值再加1，詳細見下表。
+
+| 顯示板上嘅Address | 訊號嘅Address (ASCII) | 訊號嘅Address (Hex) |
 |------------------:|---------------:|---------------:|
 |                 0 |            11 |     0x31 0x31 |
 | 1                 | 12            | 0x31 0x32     |
