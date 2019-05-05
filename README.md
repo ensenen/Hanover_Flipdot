@@ -1,54 +1,23 @@
-# Python driver for Flipdot destination signs
+## Address
+Address 係一個介付於 0-F 嘅數值，用來分辨控制器輸出嘅訊號係去邊塊板。每一塊顯示板都有一個電子零件可以設定嗰塊板自己嘅Address。
 
-This library is a quick (and dirty) python implementation of the protocol used for the Hanover's displays. 
+訊號入面代表Address 嘅Byte係由兩個Byte組成，其中第一個Byte係固定值0x31，第二個Byte係根據唔同嘅Address而唔同
 
-This library is able to send text (and, for now, only text) to the display. In the future, I plan to improve the library with plotting functions.
-
-Theoretically, it is capable to drive any display whatever the resolution, althought only a few number of resolutions have actually been tested.
-
-
-# Prerequisties
-
-These displays communicates through a RS-485 bus. To use these display, a RS-485 converter is required. Personnaly, I use a cheap USB to RS485 converter, like [this one](http://www.amazon.fr/RS485-Convertisseur-Adaptateur-Support-Vista/dp/B00GWEGZOI/ref=sr_1_5?ie=UTF8&qid=1457268055&sr=8-5&keywords=usb+rs485). It does the job very well, and works perfectly on OSX and Linux. (never tested on Windows thought...)
-
-# The protocol explained
-
-All the data sent to the displays are in an ASCII representation, meaning that each bytes (or, pratically, 8 dots) are represented by two ASCII bytes. For example, ```0x3E``` will be represented by following ASCII sequence : ```0x33 0x45```. 
-
-The data bytes are treated column by column, from the upper-left corner to the lower-right corner. The amount of data sent for a resolution of 128x16 for example will be ```((128 * 16 * 2) / 8)``` bytes.
-
-The data are preceded by a header with the following format :
-
-```[START OF TEXT][ADDRESS][RESOLUTION]```.
-
-- ```START OF TEXT``` is always equal to 0x02 (ASCII SOT code)
-- ```ADDRESS``` is coded with two ASCII byte. For an unknown reason, the MSB part is always equal to 0x31 (1). The LSB part is equal to the address defined by the rotary switch located inside the display + 1.
-- ```RESOLUTION``` is the number of data bytes that will be sent. This value is computed that way : ```width * height / 8```
-
-The following sequence shows the header for a 128x16 display with address 1 : ```0x02 0x31 0x31 0x30 0x30``
-
-The data are followed by a footer and a checksum :
-
-```[END OF TEXT][CHECKSUM]```
-
-- ```END OF TEXT``` is always equal to 0x03 (ASCII EOT code)
-- ```CHECKSUM``` is ```(sum of all data bytes + all header bytes + EOT - SOT ^ 255) + 1```
-
-For example, here's a complete frame for a 21*16 display :
-
-```
-0x02 0x31 0x33 0x32 0x41                                # Header
-0x30 0x30 0x30 0x30 0x30 0x38 0x30 0x36 0x46 0x43 0x30  # Data
-0x37 0x46 0x43 0x30 0x37 0x30 0x30 0x30 0x36 0x30 0x30  # ...
-0x30 0x30 0x46 0x38 0x30 0x33 0x46 0x43 0x30 0x37 0x30  # ...
-0x43 0x30 0x36 0x30 0x43 0x30 0x36 0x46 0x43 0x30 0x37  # ...
-0x46 0x38 0x30 0x33 0x30 0x30 0x30 0x30 0x46 0x38 0x30  # ...
-0x33 0x46 0x43 0x30 0x37 0x30 0x43 0x30 0x36 0x30 0x43  # ...
-0x30 0x36 0x46 0x43 0x30 0x37 0x46 0x38 0x30 0x33 0x30  # ...
-0x30 0x30 0x30 0x30 0x30 0x30 0x30                      # End of data
-0x03 0x34 0x41                                          # Footer
-```
-
---------------
-第6章、通訊網路傳輸原理 P.17 (baudrate數值問題)
-http://read.pudn.com/downloads114/doc/comm/477646/%E4%B8%B2%E5%88%97%E5%82%B3%E8%BC%B8.pdf
+| 顯示板上嘅Address | 訊號嘅Address (Ascii) | 訊號嘅Address (Hex) |
+|------------------:|---------------:|---------------:|
+|                 0 |            11 |     0x31 0x31 |
+| 1                 | 12            | 0x31 0x32     |
+| 2                 | 13            | 0x31 0x33     |
+| 3                 | 14            | 0x31 0x34     |
+| 4                 | 15            | 0x31 0x35     |
+| 5                 | 16            | 0x31 0x36     |
+| 6                 | 17            | 0x31 0x37     |
+| 7                 | 18            | 0x31 0x38     |
+| 8                 | 19            | 0x31 0x39     |
+| 9                 | 1A            | 0x31 0x41     |
+| A                 | 1B            | 0x31 0x42     |
+| B                 | 1C            | 0x31 0x43     |
+| C                 | 1D            | 0x31 0x44     |
+| D                 | 1E            | 0x31 0x45     |
+| E                 | 1F            | 0x31 0x46     |
+| F                 | 10            | 0x31 0x30     |
